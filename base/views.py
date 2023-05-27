@@ -10,7 +10,7 @@ from rest_framework.views import APIView
 
 @api_view(['GET'])
 def endpoints(request):
-    data=['advocates','advocates/:username']
+    data=['advocates','advocates/:username','company']
     return Response(data)
 
 # @api_view(['GET','POST'])
@@ -76,7 +76,7 @@ def advocate_detail(request, username):
         return Response('user was deleted')
 
 
-@api_view
+@api_view(['GET','POST'])
 def company(request):
     
     if request.method == 'GET':
@@ -90,8 +90,10 @@ def company(request):
         return Response(serializer.data)
     
     elif request.method == 'POST':
+        
         company = Company.objects.create(
             name=request.data['name'],
             bio=request.data['bio']
         )
+        serializer = CompanySerializer(company, many=True)
         return redirect('company')
