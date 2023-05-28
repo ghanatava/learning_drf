@@ -1,10 +1,11 @@
 from django.shortcuts import render,redirect
-from rest_framework.decorators import api_view
+from rest_framework.decorators import api_view,permission_classes
 from rest_framework.response import Response
 from .models import Advocate,Company
 from .serializers import *
 from django.db.models import Q 
 from rest_framework.views import APIView
+from rest_framework.permissions import IsAuthenticated
 
 # Create your views here.
 
@@ -57,7 +58,9 @@ class AdvocateList(APIView):
         return redirect('advocates')
 
 
+
 @api_view(['GET','PUT','DELETE'])
+@permission_classes([IsAuthenticated])
 def advocate_detail(request, username):
     advocate = Advocate.objects.get(username=username)
     if request.method == 'GET':
